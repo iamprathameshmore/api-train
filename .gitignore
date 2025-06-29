@@ -1,0 +1,54 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+*.log
+*.sqlite3
+.env
+.venv/
+env/
+venv/
+build/
+dist/
+models/
+data/
+
+# ---- FastAPI Specific ----
+*.db
+*.pkl
+*.pt
+*.h5
+*.joblib
+coverage/
+htmlcov/
+
+# ---- Jupyter ----
+.ipynb_checkpoints
+
+# ---- Node.js / React ----
+node_modules/
+build/
+dist/
+.vite/
+*.log
+.env.local
+.env.development
+.env.production
+
+# ---- OS / IDE ----
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# ---- Docker ----
+*.tar
+*.pid
+docker-compose.override.yml
+
+# ---- Misc ----
+*.bak
+*.tmp
+*.old
