@@ -5,7 +5,6 @@ DATABASE_URL = "sqlite:///./sqlite.db"
 engine = create_engine(DATABASE_URL, echo=True)
 
 
-
 # Call this once at startup
 def init_db():
     SQLModel.metadata.create_all(engine)

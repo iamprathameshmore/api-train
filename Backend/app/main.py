@@ -1,15 +1,12 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI
-# from app.routes.auth_routes import authRouter  
+from fastapi.middleware.cors import CORSMiddleware
 from app.database.database_config import init_db
 from apscheduler.schedulers.background import BackgroundScheduler
-from app.scripts.cleanup import delete_uploads  
-app = FastAPI()
-
-scheduler = BackgroundScheduler()
-scheduler.add_job(delete_uploads, 'cron', hour=0, minute=0)  # runs daily at midnight
-scheduler.start()
-init_db()
-
+from app.scripts.cleanup import delete_uploads
+from app.routes.auth_routes import authRouter
 
 app = FastAPI(
     title="APITrain — ML API Builder",
@@ -22,10 +19,22 @@ app = FastAPI(
     },
 )
 
+# Setup CORS (must come after app = FastAPI(...))
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Replace with ["http://localhost:3000"] in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# app.include_router(authRouter)
+# Init DB
+init_db()
 
+# Setup Scheduler
+scheduler = BackgroundScheduler()
+scheduler.add_job(delete_uploads, "cron", hour=0, minute=0)
+scheduler.start()
 
-
-
-
+# Include routes
+app.include_router(authRouter)

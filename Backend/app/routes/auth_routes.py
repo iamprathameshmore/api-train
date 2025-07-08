@@ -1,107 +1,114 @@
-from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlmodel import Session, select
+from datetime import datetime, timedelta
+from fastapi.responses import JSONResponse
 
-from app.dto.auth_dto import UserLogin
+
+from app.utils.jwt_util import *
 from app.model.user_model import UserModel
+from app.model.otp_model import OtpModel
 from app.database.database_config import get_session
 from app.model.common_response_model import CommonResponse
-
-from app.utils.hash_password_utils import *
+from app.utils.generate_otp_util import generate_otp
+from app.dto.auth_dto import SignupDTO, LoginDTO, VerifyOtpDTO
+from app.services.send_mail_service import send_otp
 
 authRouter = APIRouter(prefix="/auth", tags=["auth"])
 
-@authRouter.post(
-    "/login",
-    summary="Log in a user",
-    description="Logs in a user and returns a JWT access token.",
-    response_model=CommonResponse,
-    
-    responses={
-        401: {"description": "Invalid credentials"},
-        200: {"description": "Login successful"},
-    },
-)
-def logIn(user: Annotated[UserLogin, Depends(UserLogin.as_form)], session: Session = Depends(get_session)):
-    ex_user = session.exec(
-        select(UserModel).where(
-            (UserModel.username == user.username) 
-        )
-    ).first()
-
-    if ex_user is None:
-        raise HTTPException(status_code=401, detail="User does not exist")
-
-    # TODO: Add password check here
-
-    return CommonResponse(
-        success=True,
-        message="User login successful",
-        data={"user_id": ex_user.id, "email": ex_user.email},
-    )
-
-
-# DTO
-class UserSignup(BaseModel):
-    username: str
-    email: EmailStr
-    password: str
-    secret_answer: str
 
 @authRouter.post("/signup", response_model=CommonResponse)
-def signup(user: UserSignup, session: Session = Depends(get_session)):
-    existing = session.exec(select(UserModel).where(UserModel.username == user.username)).first()
+def signup(payload: SignupDTO, session: Session = Depends(get_session)):
+    existing = session.exec(select(UserModel).where(UserModel.email == payload.email)).first()
     if existing:
-        raise HTTPException(status_code=400, detail="Username already exists")
+        raise HTTPException(status_code=400, detail="Email already registered")
 
-    new_user = UserModel(
-        username=user.username,
+    otp = generate_otp()
+    send_otp(payload.email, otp)
+
+    session.add(OtpModel(
+        email=payload.email,
+        otp=otp,
+        expires_at=datetime.utcnow() + timedelta(minutes=5),
+        purpose="signup",  # Optional: useful if you're tracking purpose
+    ))
+    session.commit()
+
+    return CommonResponse(success=True, message="OTP sent to email", data=None)
+
+
+@authRouter.post("/login", response_model=CommonResponse)
+def login(payload: LoginDTO, session: Session = Depends(get_session)):
+    user = session.exec(select(UserModel).where(UserModel.email == payload.email)).first()
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+
+    otp = generate_otp()
+    send_otp(user.email, otp)
+
+    session.add(OtpModel(
         email=user.email,
-        password=hash_password(user.password),  # implement this securely
-        secret_answer=hash_password(user.secret_answer),
-        createdAt=datetime.utcnow()
+        otp=otp,
+        expires_at=datetime.utcnow() + timedelta(minutes=5),
+        purpose="login",
+    ))
+    session.commit()
+
+    return CommonResponse(success=True, message="OTP sent to registered email", data=None)
+
+
+
+@authRouter.post("/verify", response_model=None)
+def verify_otp(payload: VerifyOtpDTO, session: Session = Depends(get_session)):
+    otp_record = session.exec(
+        select(OtpModel)
+        .where(OtpModel.email == payload.email)
+        .order_by(OtpModel.created_at.desc())
+    ).first()
+
+    if not otp_record or otp_record.otp != payload.otp or otp_record.expires_at < datetime.utcnow():
+        raise HTTPException(status_code=401, detail="Invalid or expired OTP")
+
+    user = session.exec(select(UserModel).where(UserModel.email == payload.email)).first()
+
+    access_token = create_access_token({"sub": str(user.id)})
+    refresh_token = create_refresh_token({"sub": str(user.id)})
+
+    session.delete(otp_record)
+    session.commit()
+
+    response = JSONResponse(
+        content={"success": True, "message": "OTP verified", "data": {"access_token": access_token}}
     )
-    session.add(new_user)
-    session.commit()
+    # Set HttpOnly refresh token
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        httponly=True,
+        secure=True,
+        samesite="strict",
+        max_age=7 * 24 * 60 * 60  # 7 days
+    )
+    return response
 
-    return CommonResponse(success=True, message="User registered successfully", data=None)
 
+@authRouter.post("/refresh-token")
+def refresh_token(request: Request, session: Session = Depends(get_session)):
+    refresh_token = request.cookies.get("refresh_token")
+    if not refresh_token:
+        raise HTTPException(status_code=401, detail="Missing refresh token")
 
-class ForgotPasswordDTO(BaseModel):
-    username: str
-    secret_answer: str
-    new_password: str
+    try:
+        payload = decode_token(refresh_token)
+        if payload.get("type") != "refresh":
+            raise HTTPException(status_code=403, detail="Invalid token type")
+    except Exception:
+        raise HTTPException(status_code=403, detail="Invalid or expired refresh token")
 
-@authRouter.post("/forgot-password", response_model=CommonResponse)
-def forgot_password(payload: ForgotPasswordDTO, session: Session = Depends(get_session)):
-    user = session.exec(select(UserModel).where(UserModel.username == payload.username)).first()
+    user_id = payload.get("sub")
+    user = session.get(UserModel, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
 
-    if not user or not verify_password(payload.secret_answer, user.secret_answer):
-        raise HTTPException(status_code=401, detail="Incorrect secret answer")
+    new_access_token = create_access_token({"sub": str(user.id)})
 
-    user.password = hash_password(payload.new_password)
-    user.updatedAt = datetime.utcnow()
-    session.add(user)
-    session.commit()
-
-    return CommonResponse(success=True, message="Password reset successful", data=None)
-
-class ChangePasswordDTO(BaseModel):
-    old_password: str
-    new_password: str
-
-@authRouter.post("/change-password", response_model=CommonResponse)
-def change_password(
-    payload: ChangePasswordDTO,
-    session: Session = Depends(get_session),
-    current_user: UserModel = Depends(get_current_user)  # You need JWT auth here
-):
-    if not verify_password(payload.old_password, current_user.password):
-        raise HTTPException(status_code=401, detail="Old password is incorrect")
-
-    current_user.password = hash_password(payload.new_password)
-    current_user.updatedAt = datetime.utcnow()
-    session.add(current_user)
-    session.commit()
-
-    return CommonResponse(success=True, message="Password changed", data=None)
+    return {"success": True, "access_token": new_access_token}

@@ -1,14 +1,17 @@
-from fastapi import Form
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
+from typing import Optional
 
-class UserLogin(BaseModel):
-    username: str
-    password: str
 
-    @classmethod
-    def as_form(
-        cls,
-        username: str = Form(...),
-        password: str = Form(...),
-    ):
-        return cls(username=username, password=password)
+class SignupDTO(BaseModel):
+    name: str
+    email: EmailStr
+    phoneNumber: Optional[str]
+
+
+class LoginDTO(BaseModel):
+    email: EmailStr
+
+
+class VerifyOtpDTO(BaseModel):
+    email: EmailStr
+    otp: str
