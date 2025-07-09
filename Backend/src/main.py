@@ -3,10 +3,16 @@ load_dotenv()
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.database.database_config import init_db
+from src.database.database_config import init_db
 from apscheduler.schedulers.background import BackgroundScheduler
-from app.scripts.cleanup import delete_uploads
-from app.routes.auth_routes import authRouter
+from src.scripts.cleanup import delete_uploads
+
+
+from src.routes.auth_routes import authRouter
+from src.routes.api_routes import apiRouter
+from src.routes.user_routes import userRouter
+from src.middleware.upload_size_middleware import LimitUploadSizeMiddleware
+
 
 app = FastAPI(
     title="APITrain — ML API Builder",
@@ -27,6 +33,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(LimitUploadSizeMiddleware)
 
 # Init DB
 init_db()
@@ -38,3 +45,5 @@ scheduler.start()
 
 # Include routes
 app.include_router(authRouter)
+app.include_router(userRouter)
+app.include_router(apiRouter)

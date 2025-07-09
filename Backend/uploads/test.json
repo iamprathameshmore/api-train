@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "message": "Dataset found",
+  "data": {
+    "id": 1,
+    "name": "Customer Purchase Dataset",
+    "file_path": "uploads/customer_purchase_data.xlsx",
+    "created_at": "2025-07-09T10:12:45.123Z",
+    "description": "Contains historical purchase data of customers across regions.",
+    "file_type": "xlsx",
+    "size_kb": 245.78,
+    "uploaded_by": {
+      "id": 3,
+      "name": "Prathamesh More",
+      "email": "prathamesh@example.com"
+    }
+  }
+}
