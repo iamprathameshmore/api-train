@@ -10,6 +10,8 @@ export default function CreateApiPage() {
 
   const handleCreate = async (data: { name: string; status: string }) => {
     try {
+      // You may need to collect username/model_name from user input or context
+      // For now, fallback to /api/apis if backend supports it, otherwise update as needed
       await apiClient.post("/api/apis", data)
       toast.success("API created successfully!")
       navigate("/apis")

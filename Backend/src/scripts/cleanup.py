@@ -1,9 +1,10 @@
 import os
 import shutil
 from datetime import datetime
+from src.config.settings import APP_NAME
 
 def delete_uploads():
-    print(f"Running cleanup at {datetime.now()}")
+    print(f"[{APP_NAME}] Running cleanup at {datetime.now()}")
 
     folders = ["uploads/models", "uploads/datasets"]
     for folder in folders:
@@ -16,4 +17,4 @@ def delete_uploads():
                     elif os.path.isdir(file_path):
                         shutil.rmtree(file_path)
                 except Exception as e:
-                    print(f"Error deleting {file_path}: {str(e)}")
+                    print(f"[{APP_NAME}] Error deleting {file_path}: {str(e)}")

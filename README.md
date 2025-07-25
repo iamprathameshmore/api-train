@@ -20,15 +20,36 @@ Built as a personal product by **Prathamesh More**, APItrain solves a real probl
 
 ---
 
-## ✨ Features
+## ✨ Production-Grade Features (v1)
 
-- 📁 Upload CSV datasets directly from the React dashboard
-- 🧠 AutoML engine using **AutoGluon** (classification & regression)
-- 🧹 Automatic data preprocessing, training & model storage
-- 🧪 Test predictions from the UI using real-time input
-- 🔌 REST APIs exposed for each trained model
-- 💻 Swagger/OpenAPI auto-generated docs
-- 🐳 1-click Docker-based full-stack deployment
+- User authentication with OTP (email-based) and JWT tokens
+- User profile management (view and update)
+- Upload datasets (CSV, Excel, JSON) via dashboard
+- Import data directly from Google Sheets (integration)
+- Automatic model training (Linear Regression, Decision Tree)
+- Model storage and management (create, view, delete APIs)
+- Model versioning and rollback support
+- Secure prediction endpoints for each trained model (API key required)
+- Real-time and batch prediction support (single and bulk)
+- API key management UI (regenerate, revoke, multiple keys)
+- API usage analytics and monitoring dashboard
+- Auto-generated Swagger/OpenAPI docs for all endpoints
+- Interactive API playground for testing endpoints
+- File upload size limit and validation
+- Scheduled cleanup of old uploads and models
+- Environment variable-based configuration for secrets and credentials
+- Docker-based deployment for both frontend and backend
+- CORS and security middleware for safe API access
+- SQLite database for user, API, and model metadata
+- Rate limiting and abuse prevention on all APIs
+- Health check endpoints for monitoring
+- Comprehensive error handling and logging
+- Email and webhook notifications for important events
+- Role-based access control (admin/user)
+- Audit logs for critical actions
+- GDPR-compliant data deletion
+- Responsive, modern UI/UX with onboarding and help sections
+- Comprehensive API and user documentation
 
 ---
 

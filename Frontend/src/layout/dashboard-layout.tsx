@@ -1,60 +1,43 @@
-// src/layouts/DashboardLayout.tsx
-
-import { Outlet, useNavigate } from "react-router-dom"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import Navbar from "@/components/custom/dashboard/nav-bar";
+import { Outlet } from "react-router-dom";
+import { Bot, HardDrive } from "lucide-react"; // optional icon
+import { Button } from "@/components/ui/button"; // if using shadcn/ui
 
 export default function DashboardLayout() {
-  const navigate = useNavigate()
-
   return (
-    <div className="min-h-screen flex flex-col bg-muted">
-      {/* Top Navbar */}
-      <header className="w-full border-b bg-background px-4 py-3 shadow-sm">
-        <div className="container mx-auto flex items-center justify-between">
-          {/* Logo / Title */}
-          <div className="text-xl font-semibold tracking-tight">🚀 APItrain</div>
-
-          {/* Right nav */}
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost" onClick={() => navigate("/dashboard")}>Dashboard</Button>
-            <Button variant="ghost" onClick={() => navigate("/models")}>Models</Button>
-
-            {/* User Profile Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Avatar className="cursor-pointer h-8 w-8">
-                  <AvatarImage src="/avatar.png" alt="User" />
-                  <AvatarFallback>PM</AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => navigate("/profile")}>Profile</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate("/settings")}>Settings</DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    localStorage.clear()
-                    navigate("/login")
-                  }}
-                >
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
-      </header>
-
-      {/* Page Content */}
-      <main className="flex-1 container mx-auto px-4 py-6">
+    <div className="relative min-h-screen bg-zinc-100 tracking-tight">
+      <Navbar />
+      <div className="mx-28 py-12">
         <Outlet />
-      </main>
+      </div>
+
+      {/* Chatbot Button */}
+      <div className="fixed bottom-5 left-36 z-50 ">
+        <Button
+          // size="icon"
+          className=" rounded-none"
+          variant='outline'
+          onClick={() => {
+            // Your chatbot open logic here (modal or iframe)
+            alert("Chatbot opened!");
+          }}
+        >
+          <HardDrive className="h-20 w-20" height={100} width={100} />
+          <span>System</span>
+        </Button>
+      </div>
+      <div className="fixed bottom-5 right-36 z-50 ">
+        <Button
+          size="icon"
+          className="w-10 h-10 rounded-none"
+          onClick={() => {
+            // Your chatbot open logic here (modal or iframe)
+            alert("Chatbot opened!");
+          }}
+        >
+          <Bot className="h-20 w-20" height={100} width={100} />
+        </Button>
+      </div>
     </div>
-  )
+  );
 }

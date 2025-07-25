@@ -5,6 +5,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, r2_score
+from src.config.settings import APP_NAME
 
 
 def train_and_save_model(file_path: str, model_type: str, save_path: str) -> dict:
@@ -17,10 +18,10 @@ def train_and_save_model(file_path: str, model_type: str, save_path: str) -> dic
     elif ext == "json":
         df = pd.read_json(file_path)
     else:
-        raise ValueError("❌ Unsupported file format: only csv, xlsx, xls, json supported.")
+        raise ValueError(f"❌ Unsupported file format: only csv, xlsx, xls, json supported. [{APP_NAME}]")
 
     if df.shape[1] < 2:
-        raise ValueError("❌ Dataset must have at least two columns (features + target).")
+        raise ValueError(f"❌ Dataset must have at least two columns (features + target). [{APP_NAME}]")
 
     # Prepare features and target
     X = df.iloc[:, :-1]
@@ -35,7 +36,7 @@ def train_and_save_model(file_path: str, model_type: str, save_path: str) -> dic
     elif model_type == "decision_tree":
         model = DecisionTreeClassifier()
     else:
-        raise ValueError("❌ Unsupported model type. Use 'linear_regression' or 'decision_tree'.")
+        raise ValueError(f"❌ Unsupported model type. Use 'linear_regression' or 'decision_tree'. [{APP_NAME}]")
 
     model.fit(X_train, y_train)
 

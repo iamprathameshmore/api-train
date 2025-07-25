@@ -26,9 +26,9 @@ apiClient.interceptors.response.use(
     const message = error?.response?.data?.detail || error.message
     const status = error?.response?.status
 
-    if (status === 401) toast.error("Unauthorized. Please login again.")
-    else if (status === 422) toast.error("Validation error.")
-    else toast.error(message || "Something went wrong.")
+    if (status === 401) toast.error("Unauthorized. Please login again.", {className:'border-none'})
+    else if (status === 422) toast.error("Validation error.", {className:'border-none'})
+    else toast.error(message || "Something went wrong.",{className:'border-none'})
 
     return Promise.reject(error)
   }

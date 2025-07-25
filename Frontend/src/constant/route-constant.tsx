@@ -13,17 +13,16 @@ export const ROUTES = {
   VERIFY_OTP: "/verify",
 
   // Dashboard
-  DASHBOARD: "/dashboard",
+  USER_DASHBOARD:{
+    HOME:'',
+    PROFILE:'profile',
+    APIS:'apis',
+    APIS_DETAILS:'apis/:api',
+    BILLING:'billing',
+    INVITE:'invite',
+    SETTINGS:'settings',
 
-  // API Management
-  APIS: "/apis",
-  API_CREATE: "/apis/create",
-  API_DETAIL: (id: string | number = ":id") => `/apis/${id}`,
-  API_UPDATE: (id: string | number = ":id") => `/apis/${id}/update`,
-
-  // User Profile
-  PROFILE: "/profile",
-  SETTINGS: "/settings",
+  },
 
   // Errors
   ERROR_500: "/error-500",

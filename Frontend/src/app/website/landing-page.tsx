@@ -1,7 +1,7 @@
-// src/pages/LandingPage.tsx
 "use client"
 
 import React from "react"
+import { Helmet } from "react-helmet"
 import { Button } from "@/components/ui/button"
 import {
   HomeIcon,
@@ -12,10 +12,17 @@ import {
 export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
-
+      <Helmet>
+        <title>APItrain – No-Code ML API Deployment</title>
+        <meta
+          name="description"
+          content="Train, deploy, and manage ML models as REST APIs – no code required. Built for developers and data scientists."
+        />
+        <link rel="canonical" href="https://apitrain.dev/" />
+      </Helmet>
 
       {/* HERO */}
-      <section className="bg-gradient-to-r from-blue-50 to-white">
+      <section className="bg-gradient-to-r from-purple-200 to-white">
         <div className="container mx-auto text-center py-24 px-6 max-w-4xl">
           <h1 className="text-5xl font-extrabold leading-tight mb-4">
             Build & Deploy ML APIs in Minutes – No Code Needed
@@ -27,7 +34,11 @@ export default function LandingPage() {
             <a href="/signup">
               <Button size="lg">Get Started Free</Button>
             </a>
-            <a href="https://github.com/yourusername/apitrain" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://github.com/yourusername/apitrain"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Button variant="ghost" size="lg">View on GitHub</Button>
             </a>
           </div>
@@ -78,7 +89,42 @@ export default function LandingPage() {
         </div>
       </section>
 
-      
+      {/* TRUSTED BY */}
+      <section className="py-16 bg-white border-t">
+        <div className="container mx-auto text-center px-6">
+          <p className="text-sm uppercase text-muted-foreground tracking-wide mb-6">
+            Trusted by teams at
+          </p>
+          <div className="flex justify-center items-center flex-wrap gap-8 grayscale opacity-80">
+            <img src="/assets/logos/airbnb.svg" alt="Airbnb" className="h-8" />
+            <img src="/assets/logos/google.svg" alt="Google" className="h-8" />
+            <img src="/assets/logos/stripe.svg" alt="Stripe" className="h-8" />
+            <img src="/assets/logos/vercel.svg" alt="Vercel" className="h-8" />
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className="py-20">
+        <div className="container mx-auto px-6 text-center max-w-3xl">
+          <h2 className="text-3xl font-bold mb-8">💬 What Our Users Say</h2>
+          <blockquote className="bg-white p-6 rounded-lg shadow text-muted-foreground italic">
+            "APItrain saved us weeks of ML engineering! We trained, deployed, and shared our model — all in one day."
+            <div className="mt-4 text-sm text-gray-500">— Anjali R., Data Scientist</div>
+          </blockquote>
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
+      <section className="py-20 bg-gradient-to-br from-purple-100 to-white text-center">
+        <div className="container mx-auto px-6">
+          <h2 className="text-3xl font-bold mb-4">Ready to Deploy Your First ML API?</h2>
+          <p className="text-muted-foreground mb-6">It’s fast, free, and requires no coding skills.</p>
+          <a href="/signup">
+            <Button size="lg">Get Started Free</Button>
+          </a>
+        </div>
+      </section>
     </div>
   )
 }
@@ -91,7 +137,7 @@ interface FeatureCardProps {
 
 function FeatureCard({ icon, title, desc }: FeatureCardProps) {
   return (
-    <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
+    <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition duration-200">
       <div className="text-primary mb-4">{icon}</div>
       <h3 className="text-lg font-semibold mb-2">{title}</h3>
       <p className="text-muted-foreground">{desc}</p>

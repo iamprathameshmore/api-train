@@ -1,4 +1,5 @@
 # frontend/Dockerfile
+
 FROM node:18-alpine
 
 # Set working directory
@@ -8,13 +9,17 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-# Copy the app
+# Copy the source code
 COPY . .
 
-# Build the app
+# Build the Vite app (production build)
 RUN npm run build
 
-# Serve the static site with serve
+# Install a static file server
 RUN npm install -g serve
-EXPOSE 5173
-CMD ["serve", "-s", "dist", "-l", "5173"]
+
+# Expose port 4187 (inside container)
+EXPOSE 4187
+
+# Serve the built app on port 4187
+CMD ["serve", "-s", "dist", "-l", "4187"]

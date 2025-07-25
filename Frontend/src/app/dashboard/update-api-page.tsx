@@ -9,6 +9,8 @@ export default function UpdateApiPage() {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const [defaultValues, setDefaultValues] = useState<{ name: string; status: "active" | "inactive" }>()
+    const [username, setUsername] = useState("");
+    const [modelName, setModelName] = useState("");
 
 
     useEffect(() => {
@@ -19,6 +21,8 @@ export default function UpdateApiPage() {
                     name: res.data.name,
                     status: res.data.status.toLowerCase() as "active" | "inactive",
                 })
+                setUsername(res.data.username || "");
+                setModelName(res.data.model_name || res.data.name || "");
             } catch {
                 toast.error("Failed to fetch API data.")
             }
@@ -29,7 +33,7 @@ export default function UpdateApiPage() {
     const handleUpdate = async (data: { name: string; status: string }) => {
         setLoading(true)
         try {
-            await apiClient.put(`/api/apis/${id}`, data)
+            await apiClient.put(`/api/${username}/models/${modelName}/update`, data)
             toast.success("API updated successfully!")
             navigate("/apis")
         } catch {

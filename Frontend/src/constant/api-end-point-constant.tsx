@@ -1,9 +1,14 @@
 // src/constants/api.ts
 
 export const API_ENDPOINTS = {
+
+
   LOGIN: "/auth/login",
   SIGNUP: "/auth/signup",
   VERIFY_OTP: "/auth/verify",
+  REFRESH_TOKEN: "/auth/refresh-token",
+
+
   CURRENT_USER: "/auth/me",
 
   APIS: "/api/apis",

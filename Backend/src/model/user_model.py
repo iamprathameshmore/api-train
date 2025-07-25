@@ -1,19 +1,19 @@
+from beanie import Document
+from pydantic import EmailStr, Field
 from typing import Optional
 from datetime import datetime
-from sqlmodel import SQLModel, Field
-from pydantic import EmailStr
 
-
-class UserModel(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+class UserModel(Document):
     name: str
-    email: EmailStr = Field(unique=True)
+    email: EmailStr
     phoneNumber: str
     otp: Optional[str] = None
     expires_at: Optional[datetime] = None
     purpose: Optional[str] = None
     createdAt: datetime = Field(default_factory=datetime.utcnow)
     updatedAt: Optional[datetime] = None
+    webhook_url: Optional[str] = None
+    role: str = Field(default="user")
 
-    class Config:
-        orm_mode = True
+    class Settings:
+        name = "users"
