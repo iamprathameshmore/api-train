@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://apitrain.dev/sitemap.xml

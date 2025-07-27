@@ -46,7 +46,8 @@ export default function LoginForm() {
       toast.success("OTP sent to your email")
       navigate(ROUTES.VERIFY_OTP)
     } catch (error) {
-      toast.error(error as string)
+      toast(error as string, {
+        className: "rounded-none", })
     } finally {
       setLoading(false)
     }

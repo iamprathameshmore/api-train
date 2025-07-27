@@ -14,7 +14,7 @@ export const ROUTES = {
 
   // Dashboard
   USER_DASHBOARD:{
-    HOME:'',
+    OVERVIEW:'',
     PROFILE:'profile',
     APIS:'apis',
     APIS_DETAILS:'apis/:api',

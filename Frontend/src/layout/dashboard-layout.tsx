@@ -7,35 +7,36 @@ export default function DashboardLayout() {
   return (
     <div className="relative min-h-screen bg-zinc-100 tracking-tight">
       <Navbar />
-      <div className="mx-28 py-12">
+      {/* Responsive main content area */}
+      <div className="px-4 sm:px-6 lg:px-8 xl:px-12 py-6 sm:py-8 lg:py-12">
         <Outlet />
       </div>
 
-      {/* Chatbot Button */}
-      <div className="fixed bottom-5 left-36 z-50 ">
+      {/* Mobile-friendly floating action buttons */}
+      <div className="fixed bottom-4 left-4 z-50 sm:bottom-5 sm:left-10">
         <Button
-          // size="icon"
-          className=" rounded-none"
+          className="rounded-none touch-feedback shadow-lg"
           variant='outline'
           onClick={() => {
             // Your chatbot open logic here (modal or iframe)
-            alert("Chatbot opened!");
+            alert("System opened!");
           }}
         >
-          <HardDrive className="h-20 w-20" height={100} width={100} />
-          <span>System</span>
+          <HardDrive className="h-5 w-5 sm:h-6 sm:w-6" />
+          <span className="hidden sm:inline ml-2">System</span>
         </Button>
       </div>
-      <div className="fixed bottom-5 right-36 z-50 ">
+      
+      <div className="fixed bottom-4 right-4 z-50 sm:bottom-5 sm:right-10">
         <Button
           size="icon"
-          className="w-10 h-10 rounded-none"
+          className="w-12 h-12 sm:w-14 sm:h-14 rounded-none touch-feedback shadow-lg"
           onClick={() => {
             // Your chatbot open logic here (modal or iframe)
             alert("Chatbot opened!");
           }}
         >
-          <Bot className="h-20 w-20" height={100} width={100} />
+          <Bot className="h-5 w-5 sm:h-6 sm:w-6" />
         </Button>
       </div>
     </div>
