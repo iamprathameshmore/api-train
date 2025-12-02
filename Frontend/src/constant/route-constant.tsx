@@ -3,7 +3,8 @@
 export const ROUTES = {
   // Public Website
   HOME: "/",
-  ABOUT: "/about",
+  CONTACT: "/contact-us",
+  ABOUT: "/about-us",
   HELP: "/help",
   PRICING: "/pricing",
 
@@ -13,14 +14,14 @@ export const ROUTES = {
   VERIFY_OTP: "/verify",
 
   // Dashboard
-  USER_DASHBOARD:{
-    OVERVIEW:'',
-    PROFILE:'profile',
-    APIS:'apis',
-    APIS_DETAILS:'apis/:api',
-    BILLING:'billing',
-    INVITE:'invite',
-    SETTINGS:'settings',
+  USER_DASHBOARD: {
+    OVERVIEW: '',
+    PROFILE: 'profile',
+    APIS: 'apis',
+    APIS_DETAILS: 'apis/:api',
+    BILLING: 'billing',
+    INVITE: 'invite',
+    SETTINGS: 'settings',
 
   },
 
