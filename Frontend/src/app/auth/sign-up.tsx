@@ -24,16 +24,19 @@ export default function SignupForm() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
+
   const form = useForm<SignupData>({
     resolver: zodResolver(signupSchema),
     defaultValues: { name: "", email: "", phoneNumber: "" },
   })
 
+  const errors = form.formState.errors
+
   const onSubmit = async (data: SignupData) => {
     setLoading(true)
     try {
       await dispatch(signup(data)).unwrap()
-      localStorage.setItem("email", data.email) // ✅ Save email
+      localStorage.setItem("email", data.email)
       toast.success("OTP sent to your email")
       navigate(ROUTES.VERIFY_OTP)
     } catch (error) {
@@ -47,69 +50,113 @@ export default function SignupForm() {
     <>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>Sign Up - API Train</title>
+        <title>Sign Up – API Train</title>
       </Helmet>
-      <div>
 
+      <div className="flex w-full">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-sm w-full bg-white p-6 rounded-xl shadow-none">
-            <h2 className="text-xl font-bold text-center">Sign Up</h2>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="
+              w-full max-w-sm 
+              bg-white 
+              rounded-xl 
+              space-y-6 
+              shadow-sm
+            "
+          >
+            {/* Heading */}
+            <div className="text-start space-y-1">
+              <h2 className="text-2xl font-semibold tracking-tight">Sign Up</h2>
+              <p className="text-sm text-muted-foreground">
+                Create your account to get started
+              </p>
+            </div>
 
+            {/* Name Field */}
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="space-y-2">
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="John Doe" {...field} />
+                    <Input
+                      placeholder="John Doe"
+                      {...field}
+                      disabled={loading}
+                      className={`
+                        transition-all
+                        ${errors.name ? "border-red-500 shake" : ""}
+                      `}
+                    />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-500 text-xs" />
                 </FormItem>
               )}
             />
 
+            {/* Email Field */}
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="space-y-2">
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="you@example.com" {...field} />
+                    <Input
+                      placeholder="you@example.com"
+                      {...field}
+                      disabled={loading}
+                      className={`
+                        transition-all
+                        ${errors.email ? "border-red-500 shake" : ""}
+                      `}
+                    />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-500 text-xs" />
                 </FormItem>
               )}
             />
 
+            {/* Phone Number Field */}
             <FormField
               control={form.control}
               name="phoneNumber"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="space-y-2">
                   <FormLabel>Phone Number</FormLabel>
                   <FormControl>
-                    <Input type="tel" placeholder="+91 9876543210" {...field} />
+                    <Input
+                      type="tel"
+                      placeholder="+91 9876543210"
+                      {...field}
+                      disabled={loading}
+                      className={`
+                        transition-all
+                        ${errors.phoneNumber ? "border-red-500 shake" : ""}
+                      `}
+                    />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-500 text-xs" />
                 </FormItem>
               )}
             />
 
-            <Button type="submit" className="w-full">{loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <Loader className="animate-spin h-4 w-4" />
-                Signing...
-              </span>
-            ) : (
-              "Sign Up"
-            )}</Button>
+            {/* Submit Button */}
+            <Button type="submit" className="w-full h-11 font-semibold" disabled={loading}>
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <Loader className="animate-spin h-4 w-4" />
+                  Signing...
+                </span>
+              ) : (
+                "Sign Up"
+              )}
+            </Button>
           </form>
         </Form>
-
       </div>
     </>
-
   )
 }

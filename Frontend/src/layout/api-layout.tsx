@@ -11,7 +11,7 @@ export default function ApiLayout() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <header className="border-b pb-2">
         <h1 className="text-2xl font-bold">API: {id}</h1>
 

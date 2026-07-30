@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Loader, Loader2 } from "lucide-react" // Spinner icon
+import { Loader } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { ROUTES } from "@/constant/route-constant"
 
@@ -42,46 +42,80 @@ export default function LoginForm() {
     setLoading(true)
     try {
       await dispatch(login(data.email)).unwrap()
-      localStorage.setItem("email", data.email) // ✅ Save email
+      localStorage.setItem("email", data.email)
       toast.success("OTP sent to your email")
       navigate(ROUTES.VERIFY_OTP)
     } catch (error) {
       toast(error as string, {
-        className: "rounded-none", })
+        className: "rounded-none",
+      })
     } finally {
       setLoading(false)
     }
   }
 
+  const emailError = form.formState.errors.email
+
   return (
     <>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>Log In - API Train</title>
+        <title>Login – API Train</title>
       </Helmet>
-      <div>
+
+      <div className="flex w-full">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-6 max-w-sm w-full bg-white p-6 rounded-xl shadow-none"
+            className="
+              w-full max-w-sm 
+              bg-white 
+              rounded-xl 
+              space-y-6 
+              shadow-sm
+            "
           >
-            <h2 className="text-xl font-bold text-center">Login</h2>
+            {/* Heading */}
+            <div className="text-start space-y-1">
+              <h2 className="text-2xl font-semibold tracking-tight">Log In</h2>
+              <p className="text-sm text-muted-foreground">
+                Enter your email to receive an OTP
+              </p>
+            </div>
 
+            {/* Email Field */}
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="space-y-2">
                   <FormLabel>Email</FormLabel>
+
                   <FormControl>
-                    <Input placeholder="you@example.com" {...field} disabled={loading} className="rounded-none font-bold"/>
+                    <Input
+                      placeholder="you@example.com"
+                      {...field}
+                      disabled={loading}
+                      className={`
+                        font-medium 
+                        transition-all
+                    
+                        ${emailError ? "border-red-500 shake" : ""}
+                      `}
+                    />
                   </FormControl>
-                  <FormMessage />
+
+                  <FormMessage className="text-red-500 text-xs" />
                 </FormItem>
               )}
             />
 
-            <Button type="submit" className="w-full rounded-none hover:bg-pink-500" disabled={loading}>
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full font-semibold h-11 rounded-md"
+            >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
                   <Loader className="animate-spin h-4 w-4" />
@@ -91,6 +125,13 @@ export default function LoginForm() {
                 "Send OTP"
               )}
             </Button>
+
+            {/* Footer */}
+            <div className="pt-2 text-center">
+              <p className="text-xs text-muted-foreground">
+                By continuing, you agree to our Terms of Service and Privacy Policy.
+              </p>
+            </div>
           </form>
         </Form>
       </div>

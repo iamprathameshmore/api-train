@@ -1,4 +1,0 @@
-mongoengine
-beanie
-motor
-razorpay

@@ -6,41 +6,50 @@ import downloadGif from "@/assets/download.gif"
 
 export default function AuthLayout() {
   return (
-    <div className="flex min-h-screen">
-      {/* Left: Form Section */}
-      <div className="flex flex-1 bg-white px-6 py-12 items-center justify-center">
-        <Card className="w-full min-w-3xs shadow-none border-none">
-          {/* Make vertical layout here */}
-          <CardContent className="h-[80vh] flex flex-col justify-between">
+    <div className="flex min-h-screen w-full bg-background">
+      {/* Left Panel */}
+      <section className="flex flex-1 items-center justify-center px-8 py-10 bg-white">
+        <Card className="w-full max-w-lg border-0 shadow-none">
+          <CardContent className="flex flex-col h-full min-h-[80vh] justify-between">
+
             {/* Header */}
-            <div className="text-center space-y-1">
-              <h1 className="text-3xl font-bold text-gray-900">Welcome to APITrain</h1>
+            <header className="space-y-1">
+              <h1 className="text-3xl font-semibold text-gray-900 leading-tight">
+                Welcome to APITrain
+              </h1>
               <p className="text-sm text-muted-foreground">
                 Build AI APIs with zero boilerplate
               </p>
-            </div>
+            </header>
 
-            {/* Form Area (Outlet) */}
-            <div className="flex justify-center max-w-2xl">
-              <Outlet />
-            </div>
+            {/* Main Form Area */}
+            <main className="flex justify-start">
+              <div className="w-full">
+                <Outlet />
+              </div>
+            </main>
 
             {/* Footer */}
-            <p className="text-xs text-gray-400 text-center">
-              © {new Date().getFullYear()} API Train — Made with ❤️ in India
-            </p>
+            <footer>
+              <p className="text-xs text-gray-400">
+                © {new Date().getFullYear()} API Train • Made with ❤️ in India
+              </p>
+            </footer>
           </CardContent>
         </Card>
-      </div>
+      </section>
 
-      {/* Right: Illustration Section */}
-      <div className="hidden md:flex flex-1 items-center justify-center bg-black">
+      {/* Right Illustration Panel */}
+      <section className="hidden md:flex flex-1 items-center justify-center bg-black relative overflow-hidden">
         <img
           src={downloadGif}
           alt="AI workflow animation"
-          className="w-full h-auto object-contain"
+          className="w-full h-full object-cover opacity-80"
         />
-      </div>
+
+        {/* Optional dark overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
+      </section>
     </div>
   )
 }
